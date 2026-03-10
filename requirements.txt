@@ -1,0 +1,28 @@
+# Thư viện cần thiết cho dự án BTL Data Mining
+# Cài đặt: pip install -r requirements.txt
+
+# Xử lý dữ liệu
+pandas>=1.5.0
+numpy>=1.23.0
+
+# Machine Learning
+scikit-learn>=1.2.0
+xgboost>=1.7.0
+imbalanced-learn>=0.10.0
+
+# Association Rules
+mlxtend>=0.22.0
+
+# Trực quan hóa
+matplotlib>=3.6.0
+seaborn>=0.12.0
+
+# Config
+pyyaml>=6.0
+
+# Dashboard
+streamlit>=1.30.0
+
+# Jupyter (tùy chọn)
+jupyter>=1.0.0
+ipykernel>=6.0.0
