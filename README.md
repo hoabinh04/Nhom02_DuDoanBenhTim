@@ -4,7 +4,7 @@
 - Nhom: Nhom 02
 - Thanh vien:
 - Nguyen Hoa Binh
-- (Bo sung cac thanh vien con lai neu co)
+- Dinh Tan Phat
 - Chu de: Du doan nguy co benh tim
 - Dataset: UCI Heart Disease
 
@@ -13,39 +13,41 @@ Muc tieu cua nhom la:
 > Xay dung he thong phan tich va du doan benh tim tu du lieu lam sang, so sanh hieu qua nhieu mo hinh hoc may, ket hop khai pha tri thuc va trien khai dashboard Streamlit de truc quan ket qua.
 
 Muc tieu cu the:
-- Xay dung pipeline end-to-end: load data -> tien xu ly -> modeling -> danh gia -> bao cao.
-- Danh gia mo hinh theo bo chi so phu hop y te: Accuracy, Precision, Recall, F1-Score, AUC-ROC, PR-AUC.
-- Uu tien giam False Negative de han che bo sot benh nhan co nguy co.
-- Thu nghiem them huong semi-supervised va hoi quy de mo rong phan tich.
+- Xay dung pipeline end-to-end: load data -> preprocessing -> modeling -> evaluation -> visualization.
+- So sanh 7 mo hinh supervised theo bo chi so: Accuracy, Precision, Recall, F1-Score, AUC-ROC, PR-AUC.
+- Thu nghiem semi-supervised trong boi canh it du lieu nhan (5%, 10%, 20%, 30%).
+- Bo sung nhom bai toan hoi quy de danh gia kha nang du doan chi so lien tuc.
+- Trien khai dashboard Streamlit tong hop ket qua de demo.
 
 ## 1. Y tuong va Feynman Style
-Giai thich de hieu:
-- Bai toan can tra loi: "Benh nhan nay co kha nang mac benh tim khong?"
-- Dau vao la cac chi so co ban khi kham: tuoi, gioi tinh, huyet ap, cholesterol, ECG, trieu chung...
-- Mo hinh hoc tu du lieu qua khu co nhan de du doan cho ca moi.
-- Neu mo hinh du doan som nguoi co nguy co cao, bac si co them thong tin de uu tien theo doi.
+Noi de hieu:
+- Bai toan can tra loi: "Benh nhan co nguy co benh tim hay khong?"
+- Dau vao la thong tin kham benh thong thuong: tuoi, huyet ap, cholesterol, ECG, trieu chung khi gang suc.
+- Mo hinh hoc may hoc tu du lieu lich su da co nhan de du doan cho benh nhan moi.
+- Neu du doan som dung nguoi co nguy co cao, bac si co them thong tin de uu tien theo doi.
 
-Tai sao cach tiep can nay phu hop:
-- Du lieu co nhan ro rang (`num`).
-- So luong mau du de thu nghiem nhieu mo hinh va so sanh.
-- Co the danh gia dinh luong bang metric tren tap test.
+Tai sao phu hop:
+- Dataset co nhan ro rang (`num`) va da duoc su dung rong rai trong bai toan hoc thuat.
+- Co du mau de huan luyen, kiem tra va so sanh nhieu mo hinh.
+- Co metric chuan de danh gia hieu qua tren tap test.
 
 ## 2. Quy trinh thuc hien
-1) Load va kiem tra schema du lieu goc  
-2) Lam sach va tien xu ly (missing, encode, scale, split, SMOTE)  
-3) Feature engineering va feature importance  
-4) Khai pha du lieu (Apriori, Clustering, Anomaly Detection)  
-5) Huan luyen supervised models + GridSearchCV  
-6) Thu nghiem semi-supervised (5/10/20/30% nhan)  
-7) Danh gia va visualization (ROC, PR, confusion matrix, error analysis)  
-8) Hoi quy chi so huyet ap (`trestbps`)  
-9) Trien khai dashboard Streamlit tong hop ket qua
+1) Load du lieu va kiem tra schema  
+2) Lam sach, xu ly missing, encode va scale  
+3) Chia train/test va can bang lop bang SMOTE  
+4) Feature engineering va feature importance  
+5) Khai pha du lieu: Association Rules, Clustering, Anomaly Detection  
+6) Huan luyen supervised models + GridSearchCV  
+7) Thu nghiem semi-supervised  
+8) Danh gia tong hop + visualization  
+9) Thu nghiem hoi quy  
+10) Trien khai dashboard Streamlit
 
-## 3. Mo ta dataset va tien xu ly
+## 3. Dataset va preprocessing
 ### 3.1 Nguon du lieu
 - Ten bo du lieu: UCI Heart Disease
 - Nguon: https://archive.ics.uci.edu/ml/datasets/heart+disease
-- File su dung: data/raw/heart_disease_uci.csv
+- Duong dan file: data/raw/heart_disease_uci.csv
 - Quy mo: 920 mau, 16 cot (bao gom target)
 
 ### 3.2 Data Dictionary
@@ -68,22 +70,75 @@ Tai sao cach tiep can nay phu hop:
 | thal | Ket qua thalassemia |
 | num | Target goc 0-4 |
 
-Target su dung trong phan lop:
-- `num = 0` -> khong benh
-- `num > 0` -> co benh
+Target phan lop:
+- num = 0 -> khong benh
+- num > 0 -> co benh
 
-### 3.3 Cac buoc tien xu ly
-- Xu ly missing values theo cot.
-- Nhi phan hoa target.
-- Encode bien phan loai.
-- Chia train/test voi `test_size = 0.2`, `seed = 42`.
+### 3.3 Cac buoc preprocessing
+- Xu ly missing values theo cot (sau xu ly: khong con missing).
+- Nhi phan hoa target (`num > 0 => 1`).
+- Encode bien phan loai (`sex`, `cp`, `fbs`, `restecg`, `exang`, `slope`, `thal`).
 - Chuan hoa bien so bang StandardScaler.
+- Chia train/test voi test_size = 0.2, seed = 42.
 - Can bang lop train bang SMOTE.
 
-Thong so cau hinh chinh nam trong file: configs/params.yaml
+### 3.4 Bieu do cho phan du lieu va preprocessing
+Hinh 3.1 - Phan bo target
 
-## 4. Mo hinh va tham so
-### 4.1 Mo hinh supervised
+![Target Distribution](outputs/figures/target_distribution.png)
+
+Hinh 3.2 - Phan bo bien so
+
+![Numerical Distributions](outputs/figures/numerical_distributions.png)
+
+Hinh 3.3 - Phan bo bien phan loai
+
+![Categorical Distributions](outputs/figures/categorical_distributions.png)
+
+Hinh 3.4 - Ma tran tuong quan
+
+![Correlation Matrix](outputs/figures/correlation_matrix.png)
+
+Hinh 3.5 - Bien so theo nhom benh/khong benh
+
+![Numerical by Target](outputs/figures/numerical_by_target.png)
+
+## 4. Khai pha du lieu (Data Mining)
+### 4.1 Association Rules (Apriori)
+- Muc tieu: tim cac mau ket hop giua trieu chung/chi so va tinh trang benh.
+- Cau hinh:
+  - min_support = 0.1
+  - min_confidence = 0.6
+- Ket qua: sinh duoc tap luat co lift > 2 cho thay mot so to hop trieu chung xuat hien manh.
+
+Vi du luat lift cao:
+- antecedents: atypical angina + False
+- consequents: flat + no_disease + normal
+- support = 0.1174
+- confidence = 0.6353
+- lift = 2.2308
+
+### 4.2 Clustering
+- Muc tieu: tim nhom benh nhan co profile giong nhau.
+- Mo hinh: K-Means (thu k = 2..7) va DBSCAN.
+- Ket qua: k = 4 cho chat luong cum tot nhat theo Silhouette/DBI trong khoang thu nghiem.
+
+### 4.3 Anomaly Detection
+- Muc tieu: phat hien benh nhan co profile bat thuong.
+- Mo hinh: Isolation Forest, contamination = 0.05.
+- Ket qua: phat hien cac diem anomaly de phuc vu canh bao so bo.
+
+### 4.4 Bieu do cho phan khai pha du lieu
+Hinh 4.1 - Ket qua phan cum
+
+![Clustering Results](outputs/figures/clustering_results.png)
+
+Hinh 4.2 - Phat hien bat thuong
+
+![Anomaly Detection](outputs/figures/anomaly_detection.png)
+
+## 5. Mo hinh supervised va danh gia
+### 5.1 Mo hinh thu nghiem
 - LogisticRegression
 - DecisionTree
 - RandomForest
@@ -92,42 +147,7 @@ Thong so cau hinh chinh nam trong file: configs/params.yaml
 - GradientBoosting
 - XGBoost
 
-### 4.2 Cross-validation va toi uu
-- CV folds: 5
-- Toi uu hyperparameter bang GridSearchCV theo tung model.
-
-### 4.3 Mo hinh semi-supervised
-- Supervised-only (chi dung mau co nhan)
-- Self-Training
-- Label Spreading
-- Ti le nhan: 5%, 10%, 20%, 30%
-
-### 4.4 Mo hinh hoi quy
-- LinearRegression
-- Ridge
-- XGBRegressor
-- Muc tieu hoi quy: `trestbps`
-
-## 5. Truc quan hoa (Visualization)
-Cac hinh chinh duoc sinh trong outputs/figures:
-- target_distribution.png
-- numerical_distributions.png
-- categorical_distributions.png
-- correlation_matrix.png
-- numerical_by_target.png
-- model_comparison_bar.png
-- roc_curves.png
-- pr_curves.png
-- confusion_matrices.png
-- semi_supervised_learning_curve.png
-- regression_actual_vs_pred.png
-- regression_residuals.png
-- regression_feature_importance.png
-- clustering_results.png
-- anomaly_detection.png
-
-## 6. Ket qua chi tiet
-### 6.1 So sanh supervised models
+### 5.2 Ket qua tong hop supervised
 Du lieu tu outputs/tables/model_comparison.csv
 
 | Mo hinh | Accuracy | Precision | Recall | F1-Score | AUC-ROC | PR-AUC |
@@ -140,24 +160,67 @@ Du lieu tu outputs/tables/model_comparison.csv
 | LogisticRegression | 0.8098 | 0.8252 | 0.8333 | 0.8293 | 0.8868 | 0.9010 |
 | DecisionTree | 0.7880 | 0.8119 | 0.8039 | 0.8079 | 0.7970 | 0.7746 |
 
-Nhan xet nhanh:
+Tom tat:
 - Best theo F1: GradientBoosting (0.8683)
 - Best theo Recall: SVM (0.8922)
 - Best theo PR-AUC: RandomForest (0.9354)
 
-### 6.2 Ket qua semi-supervised
-Du lieu tu outputs/tables/semi_supervised_results.csv
+### 5.3 Tham so toi uu va thoi gian train
+Du lieu tu outputs/tables/model_training_results.csv
 
-Tong quan:
-- Supervised-only cho ket qua on dinh va thuong tot hon hai huong semi-supervised.
-- Self-Training co Pseudo-label accuracy dao dong 65.4% -> 72.6%.
-- Label Spreading chay rat nhanh nhung metric thap hon.
+| Mo hinh | Best params | CV F1 mean | CV F1 std | Thoi gian (s) |
+|---|---|---:|---:|---:|
+| LogisticRegression | {C: 1} | 0.8061 | 0.0276 | 4.96 |
+| DecisionTree | {max_depth: 10, min_samples_split: 5} | 0.7891 | 0.0142 | 0.29 |
+| RandomForest | {max_depth: 10, min_samples_split: 2, n_estimators: 100} | 0.8388 | 0.0243 | 2.97 |
+| SVM | {C: 1, kernel: rbf} | 0.8218 | 0.0363 | 0.47 |
+| KNN | {n_neighbors: 7, weights: distance} | 0.8052 | 0.0372 | 0.10 |
+| GradientBoosting | {learning_rate: 0.1, max_depth: 3, n_estimators: 200} | 0.8229 | 0.0341 | 1.92 |
+| XGBoost | {learning_rate: 0.1, max_depth: 5, n_estimators: 100} | 0.8221 | 0.0323 | 0.47 |
 
-Diem noi bat:
-- Ty le nhan 20%: Supervised-only dat F1 = 0.8597 (cao nhat trong bang semi-supervised).
-- Ty le nhan 5%: Self-Training dat F1 = 0.7982, thap hon supervised-only (0.8357).
+### 5.4 Bieu do cho phan supervised
+Hinh 5.1 - Bieu do so sanh metric
 
-### 6.3 Ket qua hoi quy
+![Model Comparison](outputs/figures/model_comparison_bar.png)
+
+Hinh 5.2 - ROC curves
+
+![ROC Curves](outputs/figures/roc_curves.png)
+
+Hinh 5.3 - PR curves
+
+![PR Curves](outputs/figures/pr_curves.png)
+
+Hinh 5.4 - Confusion matrices
+
+![Confusion Matrices](outputs/figures/confusion_matrices.png)
+
+## 6. Semi-supervised learning
+### 6.1 Cau hinh
+- Ti le nhan: 5%, 10%, 20%, 30%
+- Phuong phap:
+  - Supervised-only
+  - Self-Training
+  - Label Spreading
+
+### 6.2 Ket qua chinh
+- Supervised-only nhin chung tot hon tren bo du lieu hien tai.
+- Self-Training co Pseudo-label Acc dao dong: 65.4% -> 72.6%.
+- Label Spreading nhanh nhung metric thap hon.
+
+Diem cao nhat trong bang semi-supervised:
+- Ty le nhan 20%, Supervised-only: F1 = 0.8597, PR-AUC = 0.9003
+
+### 6.3 Bieu do cho phan semi-supervised
+Hinh 6.1 - Learning curve semi-supervised
+
+![Semi-supervised Learning Curve](outputs/figures/semi_supervised_learning_curve.png)
+
+## 7. Bai toan hoi quy
+### 7.1 Muc tieu
+- Du doan `trestbps` (huyet ap luc nghi) de mo rong phan tich sang bai toan lien tuc.
+
+### 7.2 Ket qua hoi quy
 Du lieu tu outputs/tables/regression_results.csv
 
 | Mo hinh | CV MAE mean | CV RMSE mean | Train MAE | Train RMSE |
@@ -167,71 +230,76 @@ Du lieu tu outputs/tables/regression_results.csv
 | XGBRegressor | 15.5560 | 20.7926 | 5.4434 | 7.7925 |
 
 Nhan xet:
-- Ridge va LinearRegression generalize tot (train va CV gan nhau).
-- XGBRegressor co dau hieu overfit ro (train rat tot, CV xau).
+- Ridge va LinearRegression on dinh hon tren CV.
+- XGBRegressor co dau hieu overfit ro (chenh lech train va CV lon).
 
-## 7. Insight tu ket qua
-Insight #1: GradientBoosting la lua chon can bang tot nhat theo F1.  
-Insight #2: Neu uu tien giam bo sot benh nhan, SVM co Recall cao nhat.  
-Insight #3: PR-AUC cao cua RandomForest cho thay kha nang phan biet tot tren nhieu nguong.  
-Insight #4: Semi-supervised khong vuot supervised-only tren bo du lieu hien tai.  
-Insight #5: Khuynh huong overfit xuat hien o XGBRegressor trong bai toan hoi quy.
+### 7.3 Bieu do cho phan hoi quy
+Hinh 7.1 - Actual vs Predicted
 
-## 8. Ket luan va de xuat
+![Regression Actual vs Predicted](outputs/figures/regression_actual_vs_pred.png)
+
+Hinh 7.2 - Residuals
+
+![Regression Residuals](outputs/figures/regression_residuals.png)
+
+Hinh 7.3 - Feature Importance
+
+![Regression Feature Importance](outputs/figures/regression_feature_importance.png)
+
+## 8. Dashboard Streamlit
+File app: app.py
+
+Dashboard gom 7 trang:
+- Tong quan
+- EDA
+- Khai pha du lieu
+- Mo hinh phan loai
+- Semi-supervised
+- Hoi quy
+- Du doan truc tuyen
+
+Tinh nang:
+- Hien thi bang ket qua va bieu do cho tung phan.
+- Loc association rules theo support, confidence, lift.
+- So sanh semi-supervised theo tung ti le nhan.
+- Form du doan online tu thong tin benh nhan.
+
+## 9. Insight tong hop
+Insight #1: GradientBoosting la lua chon can bang tot nhat theo F1-Score.  
+Insight #2: SVM cho Recall cao nhat, phu hop muc tieu giam bo sot benh nhan.  
+Insight #3: RandomForest co PR-AUC cao nhat, cho thay kha nang on dinh tren nhieu nguong.  
+Insight #4: Semi-supervised chua vuot supervised-only trong boi canh du lieu hien tai.  
+Insight #5: XGBRegressor overfit trong bai toan hoi quy, can regularization/manh tay hon.
+
+## 10. Ket luan va de xuat
 Ket luan:
-- Bai toan du doan benh tim dat ket qua tot voi nhieu mo hinh supervised.
-- He thong da hoan thien tu xu ly du lieu den visualization va dashboard demo.
+- Pipeline da hoan thien va tai lap duoc ket qua.
+- Du an da bao phu day du: EDA, mining, supervised, semi-supervised, regression, dashboard.
 
-De xuat cai thien tiep:
+De xuat phat trien tiep:
 - Threshold tuning theo muc tieu y te (uu tien Recall/FN).
-- Thu nghiem calibration xac suat.
-- Ensemble model theo weighted voting/stacking.
-- Bo sung feature domain-specific neu co metadata lam sang.
-- Danh gia bo sung tren external dataset neu thu thap duoc.
+- Calibration xac suat cho mo hinh phan lop.
+- Ensemble/stacking de cai thien do on dinh.
+- Bo sung du lieu ngoai (external validation) neu co.
 
-## 9. Huong dan chay du an
-### 9.1 Cai dat
+## 11. Huong dan chay nhanh
+### 11.1 Cai dat
 ```bash
 pip install -r requirements.txt
 ```
 
-### 9.2 Chay pipeline tong
+### 11.2 Chay pipeline tong
 ```bash
 python scripts/run_pipeline.py
 ```
 
-### 9.3 Chay notebook theo thu tu
-- notebooks/01_eda.ipynb
-- notebooks/02_preprocess_feature.ipynb
-- notebooks/03_mining_or_clustering.ipynb
-- notebooks/04_modeling.ipynb
-- notebooks/04b_semi_supervised.ipynb
-- notebooks/05_evaluation_report.ipynb
-- notebooks/06_regression.ipynb
-
-### 9.4 Chay Streamlit
+### 11.3 Chay Streamlit
 ```bash
 streamlit run app.py
 ```
-Mac dinh: http://localhost:8501
+Mac dinh mo tai: http://localhost:8501
 
-## 10. Mo ta dashboard Streamlit
-Dashboard trong file app.py gom 7 trang:
-- Tong quan du an
-- Kham pha du lieu (EDA)
-- Khai pha du lieu
-- Mo hinh phan loai
-- Hoc ban giam sat
-- Mo hinh hoi quy
-- Du doan truc tuyen
-
-Tinh nang chinh:
-- Hien thi bang metric va bieu do tong hop.
-- Loc luat ket hop theo support/confidence/lift.
-- So sanh semi-supervised theo tung ty le nhan.
-- Demo du doan online voi model da train.
-
-## 11. Cau truc thu muc
+## 12. Cau truc thu muc
 ```
 BTL-DATAMINING/
 |-- app.py
@@ -265,11 +333,11 @@ BTL-DATAMINING/
 `-- README.md
 ```
 
-## 12. Link code, notebook, slide
+## 13. Link code, notebook, slide
 - Repo: https://github.com/hoabinh04/Nhom02_DuDoanBenhTim
-- Nhanh den notebook: thu muc notebooks/
+- Notebook: thu muc notebooks/
 - Link slide: (bo sung)
 
-## 13. Luu y
-- Day la he thong ho tro hoc tap va phan tich du lieu.
-- Ket qua khong thay the chan doan y khoa chuyen nghiep.
+## 14. Luu y
+- Du an mang tinh hoc tap va ho tro phan tich.
+- Khong su dung thay the chan doan y khoa chuyen nghiep.
