@@ -1,4 +1,4 @@
-# Case Study: Du Doan Benh Tim voi Data Mining (UCI Heart Disease)
+﻿# Case Study: Du Doan Benh Tim voi Data Mining (UCI Heart Disease)
 
 ## Thong tin Nhom
 - Nhom: Nhom 02
@@ -85,23 +85,23 @@ Target phan lop:
 ### 3.4 Bieu do cho phan du lieu va preprocessing
 Hinh 3.1 - Phan bo target
 
-![Target Distribution](outputs/figures/target_distribution.png)
+![Target Distribution](docs/images/target_distribution.png)
 
 Hinh 3.2 - Phan bo bien so
 
-![Numerical Distributions](outputs/figures/numerical_distributions.png)
+![Numerical Distributions](docs/images/numerical_distributions.png)
 
 Hinh 3.3 - Phan bo bien phan loai
 
-![Categorical Distributions](outputs/figures/categorical_distributions.png)
+![Categorical Distributions](docs/images/categorical_distributions.png)
 
 Hinh 3.4 - Ma tran tuong quan
 
-![Correlation Matrix](outputs/figures/correlation_matrix.png)
+![Correlation Matrix](docs/images/correlation_matrix.png)
 
 Hinh 3.5 - Bien so theo nhom benh/khong benh
 
-![Numerical by Target](outputs/figures/numerical_by_target.png)
+![Numerical by Target](docs/images/numerical_by_target.png)
 
 ## 4. Khai pha du lieu (Data Mining)
 ### 4.1 Association Rules (Apriori)
@@ -131,11 +131,11 @@ Vi du luat lift cao:
 ### 4.4 Bieu do cho phan khai pha du lieu
 Hinh 4.1 - Ket qua phan cum
 
-![Clustering Results](outputs/figures/clustering_results.png)
+![Clustering Results](docs/images/clustering_results.png)
 
 Hinh 4.2 - Phat hien bat thuong
 
-![Anomaly Detection](outputs/figures/anomaly_detection.png)
+![Anomaly Detection](docs/images/anomaly_detection.png)
 
 ## 5. Mo hinh supervised va danh gia
 ### 5.1 Mo hinh thu nghiem
@@ -181,19 +181,19 @@ Du lieu tu outputs/tables/model_training_results.csv
 ### 5.4 Bieu do cho phan supervised
 Hinh 5.1 - Bieu do so sanh metric
 
-![Model Comparison](outputs/figures/model_comparison_bar.png)
+![Model Comparison](docs/images/model_comparison_bar.png)
 
 Hinh 5.2 - ROC curves
 
-![ROC Curves](outputs/figures/roc_curves.png)
+![ROC Curves](docs/images/roc_curves.png)
 
 Hinh 5.3 - PR curves
 
-![PR Curves](outputs/figures/pr_curves.png)
+![PR Curves](docs/images/pr_curves.png)
 
 Hinh 5.4 - Confusion matrices
 
-![Confusion Matrices](outputs/figures/confusion_matrices.png)
+![Confusion Matrices](docs/images/confusion_matrices.png)
 
 ## 6. Semi-supervised learning
 ### 6.1 Cau hinh
@@ -214,7 +214,7 @@ Diem cao nhat trong bang semi-supervised:
 ### 6.3 Bieu do cho phan semi-supervised
 Hinh 6.1 - Learning curve semi-supervised
 
-![Semi-supervised Learning Curve](outputs/figures/semi_supervised_learning_curve.png)
+![Semi-supervised Learning Curve](docs/images/semi_supervised_learning_curve.png)
 
 ## 7. Bai toan hoi quy
 ### 7.1 Muc tieu
@@ -236,15 +236,15 @@ Nhan xet:
 ### 7.3 Bieu do cho phan hoi quy
 Hinh 7.1 - Actual vs Predicted
 
-![Regression Actual vs Predicted](outputs/figures/regression_actual_vs_pred.png)
+![Regression Actual vs Predicted](docs/images/regression_actual_vs_pred.png)
 
 Hinh 7.2 - Residuals
 
-![Regression Residuals](outputs/figures/regression_residuals.png)
+![Regression Residuals](docs/images/regression_residuals.png)
 
 Hinh 7.3 - Feature Importance
 
-![Regression Feature Importance](outputs/figures/regression_feature_importance.png)
+![Regression Feature Importance](docs/images/regression_feature_importance.png)
 
 ## 8. Dashboard Streamlit
 File app: app.py
